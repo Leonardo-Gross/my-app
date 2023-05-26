@@ -3,9 +3,10 @@ import axios from "axios";
 import Header from "../Header/header";
 import { User } from "../Users/user";
 import { Modal } from "../Modal/modal";
-import { Cards } from "../Cards/cards"
+import { cards } from "../Cards/cards"
 import { Mask } from "../Mask/mask"
 import "../Home/home.css";
+
 
 export function Home() {
     const [userList, setUserList] = useState([]);
@@ -22,7 +23,7 @@ export function Home() {
             .get("https://www.mocky.io/v2/5d531c4f2e0000620081ddce")
             .then((answer) => {
             setUserList(answer.data);
-            console.log(answer)
+            console.log(answer);
         })
         .catch((error) => {
             console.log(error);
@@ -30,7 +31,7 @@ export function Home() {
     }, []);
 
     //Função para ativar o modal de pagamento e setar pagamento para o "userList"
-
+    
     function OnClickButton(user) {
         setPay(user);
         setOpenModal(true);
@@ -45,7 +46,7 @@ export function Home() {
         const formData = new FormData(event.target);
         const value = formData.get("payValue");
         const card = formData.get("selectCard");
-        const selectCard = card.find(
+        const selectCard = cards.find(
           (cardObject) => cardObject.card_number === card
         );
 
@@ -99,10 +100,11 @@ export function Home() {
                                 className="inputValue"
                                 onKeyUp={Mask}
                                 maxLength={30}
+                                
                                 required 
                             />
                             <select name="selectCard" className="selectValue">
-                                {Cards.map((card, id) => {
+                                {cards.map((card, id) => {
                                     return (
                                         <option value={card.card_number} key={id}>
                                             Cartão com final {card.card_number.substring(12)}
@@ -121,9 +123,11 @@ export function Home() {
             }
 
             {
-                userList.map((user) =>{
+                //Listagem de usuários com nome, ID e Username
+                userList.map((user) => {
                     return (
-                        <User onClick={() => {
+                        <User 
+                            onClick={() => {
                             OnClickButton(user);
                         }}
                         userImage={user.img}
@@ -140,9 +144,9 @@ export function Home() {
                 //Modal de pagamento sucesso no pagamento (true)
                 sucessPayment && (
                 <Modal
-                    titulo='Recibo de pagamento'
+                    title='Recibo de pagamento'
                     closeModal={() => setSucessPayment(false)}>
-                    <span className='texto-rodape'>
+                    <span className='text-footer'>
                         O pagamento foi concluído com sucesso!
                     </span>
                 </Modal>
@@ -153,9 +157,9 @@ export function Home() {
                 //Modal de pagamento erro no pagamento (false)
                 errorPayment && (
                     <Modal
-                        titulo='Recibo de pagamento'
+                        title='Recibo de pagamento'
                         closeModal={() => setErrorPayment(false)}>
-                        <span className='texto-rodape'>
+                        <span className='text-footer'>
                             O pagamento <strong className='strong'>não</strong> foi concluído
                             com sucesso!
                         </span>
